@@ -1,1 +1,1 @@
-plain = Airfoil("../assets/airfoils/Plain/Plain.dat")
+plain = Airfoil("Plain.dat")
