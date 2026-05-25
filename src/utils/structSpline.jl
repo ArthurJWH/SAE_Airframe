@@ -21,16 +21,16 @@ mutable struct CubicSpline <: AbstractSpline
     bc2::AbstractBC
 end
 
-function LinearSpline(coeffs::AbstractVector{<:AbstractFloat})
-    return LinearSpline([0.], [0.], coeffs)
+function LinearSpline(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
+    return LinearSpline(xs, [0.], coeffs)
 end
 
-function QuadraticSpline(coeffs::AbstractVector{<:AbstractFloat})
-    return QuadraticSpline([0.], [0.], coeffs, NopBC())
+function QuadraticSpline(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
+    return QuadraticSpline(xs, [0.], coeffs, NopBC())
 end
 
-function CubicSpline(coeffs::AbstractVector{<:AbstractFloat})
-    return CubicSpline([0.], [0.], coeffs, NopBC(), NopBC())
+function CubicSpline(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
+    return CubicSpline(xs, [0.], coeffs, NopBC(), NopBC())
 end
 
 function LinearSpline(xs::AbstractVector{<:AbstractFloat}, fs::AbstractVector{<:AbstractFloat})
