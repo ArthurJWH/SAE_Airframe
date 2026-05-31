@@ -10,13 +10,13 @@ function plot_airfoil(airfoil::Airfoil; save = false)
 
     title = airfoil.name
 
-    p = plot(x, y_top, label = "Top Surface", title = title, xlabel = "x", ylabel = "y", aspect_ratio = :equal)
-    plot!(p, x, y_bottom, label = "Bottom Surface")
-    plot!(p, x, y_camber, label = "Camber Line", linestyle = :dash)
+    p = Plots.plot(x, y_top, label = "Top Surface", title = title, xlabel = "x", ylabel = "y", aspect_ratio = :equal)
+    Plots.plot!(p, x, y_bottom, label = "Bottom Surface")
+    Plots.plot!(p, x, y_camber, label = "Camber Line", linestyle = :dash)
 
     if save
         save_path = replace(airfoil.datfile, ".dat" => ".png")
-        savefig(p, save_path)
+        Plots.savefig(p, save_path)
     end
 
     return p
