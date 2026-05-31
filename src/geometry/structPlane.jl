@@ -1,7 +1,7 @@
 using ..Coefficients
 
 struct Plane
-    surfaces::Vector{Surface}
+    surfaces::Vector{<:Surface}
     coeffs::Coeffs
 
     CG::Tuple{Float64, Float64, Float64}
@@ -14,7 +14,7 @@ struct Plane
     alpha_trim::Float64
 end
 
-function Plane(surfaces::Vector{Surface})
+function Plane(surfaces::Vector{<:Surface})
 
     coeffs = Coeffs()
     CG = (0.0, 0.0, 0.0)
