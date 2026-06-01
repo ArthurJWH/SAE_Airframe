@@ -21,18 +21,6 @@ mutable struct CubicSpline <: AbstractSpline
     bc2::AbstractBC
 end
 
-function LinearSpline(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
-    return LinearSpline(xs, [0.], coeffs)
-end
-
-function QuadraticSpline(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
-    return QuadraticSpline(xs, [0.], coeffs, NopBC())
-end
-
-function CubicSpline(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
-    return CubicSpline(xs, [0.], coeffs, NopBC(), NopBC())
-end
-
 function LinearSpline(xs::AbstractVector{<:AbstractFloat}, fs::AbstractVector{<:AbstractFloat})
     @assert length(xs) == length(fs) "xs and fs must have same length"
     @assert issorted(xs) "xs must be sorted"
@@ -310,4 +298,16 @@ end
         return 1
     end
     return min(i, length(xs) - 1)
+end
+
+function LinearSplineFromCoeffs(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
+    return LinearSpline(xs, [0.], coeffs)
+end
+
+function QuadraticSplineFromCoeffs(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
+    return QuadraticSpline(xs, [0.], coeffs, NopBC())
+end
+
+function CubicSplineFromCoeffs(xs::AbstractVector{<:AbstractFloat}, coeffs::AbstractVector{<:AbstractFloat})
+    return CubicSpline(xs, [0.], coeffs, NopBC(), NopBC())
 end
