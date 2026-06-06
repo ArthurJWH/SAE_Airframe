@@ -6,6 +6,11 @@ struct VLMMesh
     mirror_xz::Bool
 end
 
+function VLMMesh(plane::Plane, n_chord::Int, n_span::Int)
+    meshes = [VLMMesh(surface, n_chord, n_span) for surface in plane.surfaces]
+    return meshes
+end
+
 function VLMMesh(surface::Surface, n_chord::Int, n_span::Int)
 
     vertices = _generate_vertices(surface, n_chord, n_span, Val(surface.vertical))
@@ -90,8 +95,7 @@ end
 @inline function _generate_geom(surface::Surface, n_chord::Int, n_span::Int)
     b = surface.b
     ys = surface.ys
-    airfoils = surface.airfoils
-    cambers = [airfoil.camber for airfoil in airfoils]
+    cambers = getfield.(surface.airfoils, :camber)
     chord = surface.chord
     twist = surface.twist
     tw_center = surface.tw_center
@@ -104,18 +108,33 @@ end
 
     chords = chord.(y)
     
-    camber_grid = Matrix{Float64}(undef, length(x), length(ys))
-    @inbounds for j in eachindex(ys)
-        camber_j = cambers[j]
-        @simd for i in eachindex(x)
-            camber_grid[i, j] = camber_j(x[i])
-        end
-    end
+    # camber_grid = Matrix{Float64}(undef, length(x), length(ys))
+    # @inbounds for j in eachindex(ys)
+    #     camber_j = cambers[j]
+    #     @simd for i in eachindex(x)
+    #         camber_grid[i, j] = camber_j(x[i])
+    #     end
+    # end
 
-    splines_z = [
-        LinearSpline(ys, @view camber_grid[i,:])
-        for i in eachindex(x)
-    ]
+    # splines_z = [
+    #     LinearSpline(ys, @view camber_grid[i,:])
+    #     for i in eachindex(x)
+    # ]
+
+    splines_z = Vector{LinearSpline}(undef, length(x))
+
+    tmp = Vector{Float64}(undef, length(ys))
+
+    @inbounds for i in eachindex(x)
+
+        xi = x[i]
+
+        for j in eachindex(ys)
+            tmp[j] = cambers[j](xi)
+        end
+
+        splines_z[i] = LinearSpline(ys, copy(tmp))
+    end
 
     sweep_integral = IntegrateGLQ(t -> tand(sweep(t)), n=5)
     dihedral_integral = IntegrateGLQ(t -> tand(dihedral(t)), n=5)
@@ -138,7 +157,6 @@ end
         y=y,
         chords=chords,
         root_chord=chords[1],
-        camber_grid=camber_grid,
         splines_z=splines_z,
         sweep_lengths=sweep_lengths,
         dihedral_lengths=dihedral_lengths,
