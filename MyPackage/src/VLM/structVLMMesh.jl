@@ -21,7 +21,7 @@ end
 @inline function _generate_vertices(surface::Surface, n_chord::Int, n_span::Int, ::Val{false})
     geom = _generate_geom(surface, n_chord, n_span)
 
-    vertices = Array{Float64,3}(undef, n_chord+1, n_span+1, 3)
+    vertices = Array{Float64,3}(undef, 3, n_span+1, n_chord+1)
 
     @inbounds for i in eachindex(geom.x)
         xi = geom.x[i]
@@ -29,9 +29,9 @@ end
         for j in eachindex(geom.y)
             y = geom.y[j]
             chord_j = geom.chords[j]
-            vertices[i, j, 1] = xi * chord_j
-            vertices[i, j, 2] = y * geom.b
-            vertices[i, j, 3] = spl_zi(y) * chord_j
+            vertices[1, j, i] = xi * chord_j
+            vertices[2, j, i] = y * geom.b
+            vertices[3, j, i] = spl_zi(y) * chord_j
         end
     end
 
@@ -58,7 +58,7 @@ end
 @inline function _generate_vertices(surface::Surface, n_chord::Int, n_span::Int, ::Val{true})
     geom = _generate_geom(surface, n_chord, n_span)
 
-    vertices = Array{Float64,3}(undef, n_chord+1, n_span+1, 3)
+    vertices = Array{Float64,3}(undef, 3, n_span+1, n_chord+1)
 
     @inbounds for i in eachindex(geom.x)
         xi = geom.x[i]
@@ -66,9 +66,9 @@ end
         for j in eachindex(geom.y)
             y = geom.y[j]
             chord_j = geom.chords[j]
-            vertices[i, j, 1] = xi * chord_j
-            vertices[i, j, 3] = y * geom.b
-            vertices[i, j, 2] = spl_zi(y) * chord_j
+            vertices[1, j, i] = xi * chord_j
+            vertices[3, j, i] = y * geom.b
+            vertices[2, j, i] = spl_zi(y) * chord_j
         end
     end
 
@@ -107,19 +107,6 @@ end
     y = (1 .- cos.(range(0, stop=pi, length=n_span+1))) ./ 2
 
     chords = chord.(y)
-    
-    # camber_grid = Matrix{Float64}(undef, length(x), length(ys))
-    # @inbounds for j in eachindex(ys)
-    #     camber_j = cambers[j]
-    #     @simd for i in eachindex(x)
-    #         camber_grid[i, j] = camber_j(x[i])
-    #     end
-    # end
-
-    # splines_z = [
-    #     LinearSpline(ys, @view camber_grid[i,:])
-    #     for i in eachindex(x)
-    # ]
 
     splines_z = Vector{LinearSpline}(undef, length(x))
 
@@ -178,20 +165,20 @@ end
     c = cosd(twist)
     s = sind(twist)
 
-    @inbounds @simd for i in axes(vertices,1)
+    @inbounds @simd for i in axes(vertices,3)
 
-        x0 = vertices[i,j,1]
-        z0 = vertices[i,j,3]
+        x0 = vertices[1,j,i]
+        z0 = vertices[3,j,i]
 
         x = x0 - tw_center
 
-        vertices[i,j,1] =
+        vertices[1,j,i] =
             x*c + z0*s + tw_center +
             offset + sweep_length + pos[1]
 
-        vertices[i,j,2] += pos[2]
+        vertices[2,j,i] += pos[2]
 
-        vertices[i,j,3] =
+        vertices[3,j,i] =
             -x*s + z0*c + dihedral_length + pos[3]
     end
 
@@ -212,21 +199,21 @@ end
     c = cosd(twist)
     s = sind(twist)
 
-    @inbounds @simd for i in axes(vertices,1)
+    @inbounds @simd for i in axes(vertices,3)
 
-        x0 = vertices[i,j,1]
-        z0 = vertices[i,j,2]
+        x0 = vertices[1,j,i]
+        z0 = vertices[2,j,i]
 
         x = x0 - tw_center
 
-        vertices[i,j,1] =
+        vertices[1,j,i] =
             x*c + z0*s + tw_center +
             offset + sweep_length + pos[1]
 
-        vertices[i,j,2] = 
+        vertices[2,j,i] = 
             -x*s + z0*c + dihedral_length + pos[2]
 
-        vertices[i,j,3] += pos[3]
+        vertices[3,j,i] += pos[3]
     end
 
     return nothing

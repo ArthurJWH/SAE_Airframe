@@ -52,9 +52,9 @@ function _initialize_ax()
 end
 
 function _plot!(ax, mesh::VLMMesh)
-    x = mesh.vertices[:, :, 1]
-    y = mesh.vertices[:, :, 2]
-    z = mesh.vertices[:, :, 3]
+    x = mesh.vertices[1, :, :]
+    y = mesh.vertices[2, :, :]
+    z = mesh.vertices[3, :, :]
 
     GLMakie.surface!(ax, x, y, z, shading = true, colormap = :viridis)
 
@@ -69,9 +69,9 @@ function _plot!(ax, mesh::VLMMesh)
 end
 
 function _mesh_bounds(mesh::VLMMesh, min_extent)
-    x = mesh.vertices[:, :, 1]
-    y = mesh.vertices[:, :, 2]
-    z = mesh.vertices[:, :, 3]
+    x = mesh.vertices[1, :, :]
+    y = mesh.vertices[2, :, :]
+    z = mesh.vertices[3, :, :]
 
     xlims = _enforce_range(minimum(x), maximum(x), min_extent)
     ylims = _enforce_range(minimum(y), maximum(y), min_extent)
