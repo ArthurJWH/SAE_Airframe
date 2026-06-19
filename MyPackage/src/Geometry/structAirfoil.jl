@@ -1,7 +1,7 @@
 using ..IO
 using ..Utils
 
-struct Airfoil{T,B,C}
+struct Airfoil{T, B, C}
   name::SubString{String}
   datfile::String
   top_surface::T

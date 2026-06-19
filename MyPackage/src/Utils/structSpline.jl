@@ -48,8 +48,8 @@ end
 function CubicSpline(
   xs::AbstractVector{<:AbstractFloat},
   fs::AbstractVector{<:AbstractFloat};
-  bc1::AbstractBC=SecondDerivativeBC(0.0, :left),
-  bc2::AbstractBC=SecondDerivativeBC(0.0, :right),
+  bc1::AbstractBC = SecondDerivativeBC(0.0, :left),
+  bc2::AbstractBC = SecondDerivativeBC(0.0, :right),
 )
   @assert length(xs) == length(fs) "xs and fs must have same length"
   @assert issorted(xs) "xs must be sorted"
