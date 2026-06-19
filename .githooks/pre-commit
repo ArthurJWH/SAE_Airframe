@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo "Formatting Julia files..."
+
+julia --project=. Format.jl
+
+git add -u
