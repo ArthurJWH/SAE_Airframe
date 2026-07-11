@@ -1,7 +1,7 @@
 using ..PlaneInfo
 
 struct Plane
-  surfaces::Vector{<:Surface}
-  coeffs::Coeffs
-  data::Data
+    surfaces::Vector{<:Surface}
+    coeffs::Coeffs
+    data::Data
 end

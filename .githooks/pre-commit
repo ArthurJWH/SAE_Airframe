@@ -7,3 +7,5 @@ echo "Formatting Julia files..."
 julia --project=. Format.jl
 
 git add -u
+
+# git config core.hooksPath .githooks

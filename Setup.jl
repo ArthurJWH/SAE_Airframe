@@ -5,11 +5,11 @@ pkgs = ["Plots", "GLMakie"]
 reset = true
 
 if reset
-  for file in ("Project.toml", "Manifest.toml")
-    path = joinpath(dir, file)
+    for file in ("Project.toml", "Manifest.toml")
+        path = joinpath(dir, file)
 
-    isfile(path) && rm(path)
-  end
+        isfile(path) && rm(path)
+    end
 end
 
 using Pkg

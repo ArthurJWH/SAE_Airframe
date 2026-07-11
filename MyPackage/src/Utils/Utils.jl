@@ -7,14 +7,14 @@ include("structInterpolate.jl")
 include("structIntegrate.jl")
 
 export AbstractBC,
-  FirstDerivativeBC, SecondDerivativeBC, ThirdDerivativeBC, NaturalBC
+    FirstDerivativeBC, SecondDerivativeBC, ThirdDerivativeBC, NaturalBC
 export AbstractSpline,
-  LinearSpline,
-  QuadraticSpline,
-  CubicSpline,
-  LinearSplineFromCoeffs,
-  QuadraticSplineFromCoeffs,
-  CubicSplineFromCoeffs
+    LinearSpline,
+    QuadraticSpline,
+    CubicSpline,
+    LinearSplineFromCoeffs,
+    QuadraticSplineFromCoeffs,
+    CubicSplineFromCoeffs
 export LSR
 export Interpolate
 export IntegrateGLQ

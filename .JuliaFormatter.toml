@@ -1,12 +1,12 @@
 style = "blue"
 
 margin = 80
-indent = 2
+indent = 4
 
 align_assignment = true
 align_struct_field = true
 always_for_in = true
-always_use_return = true
+always_use_return = false
 annotate_untyped_fields_with_any = false
 conditional_to_if = true
 format_docstrings = true
